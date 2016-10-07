@@ -198,6 +198,7 @@
                 }
             }
         }
+
         function checkPlayer2() {
             function p2Win(val) {
                 return p2SelectedBoxes.indexOf(val) >= 0;
@@ -209,6 +210,7 @@
                 }
             }
         }
+
         function checkTie() { //check if player one wins
             if (p2SelectedBoxes.length === 8) {
                 winnerFlag = "tie";
