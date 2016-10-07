@@ -1,3 +1,5 @@
+/*globals $:false */
+
 (function($) {
 
     'use strict';
@@ -29,7 +31,12 @@
         this.computerPlayer = false;
     };
 
-
+    var addCoordinatesToBoard = function() {
+        var grid = [11, 12, 13, 21, 22, 23, 31, 32, 33];
+        for (var i = 0; i < 9; i++) {
+            $(".box").slice(i).attr("id", grid[i]);
+        }
+    };
 
     // Show start screen before first game.
     var showStartScreen = function() {
@@ -78,7 +85,7 @@
         $("#player2").prepend('<h4 class="player-name player-name-2">' + PLAYER_2.name + '</h4>');
 
         // Set the active player.
-        setActivePlayer();
+        nextPlayer();
     };
 
     // Display appropriate symbol over box on hover.
@@ -95,8 +102,8 @@
         $(this).css('background-image', '');
     });
 
-    // Set class of .active on the player who's turn it is.
-    var setActivePlayer = function() {
+    // Change active player and make computer move if necessary.
+    var nextPlayer = function() {
         // First remove active class from all list items.
         $("li").removeClass("active");
 
@@ -105,6 +112,11 @@
             $("#player1").addClass("active");
         } else if (PLAYER_2.turn === true) {
             $("#player2").addClass("active");
+        }
+
+        // Make computer move after 1 second if 1 player game.
+        if (PLAYER_2.computerPlayer === true && PLAYER_2.turn === true) {
+            setTimeout(aiMove, 1000);
         }
     };
 
@@ -127,6 +139,35 @@
         }
     };
 
+    // Make a random move. No real AI.
+    var aiMove = function() {
+        // Add .empty to empty boxes and remove it from filled boxes.
+        $(".box").each(function() {
+            if ($(this).hasClass("box-filled-1") || $(this).hasClass("box-filled-2")) {
+                $(this).removeClass("empty");
+            } else {
+                $(this).addClass("empty");
+            }
+        });
+
+        // Get a random empty box.
+        var numberOfEmptyBoxes = $(".empty").length;
+        var random = Math.floor(Math.random() * numberOfEmptyBoxes);
+        var randomEmptyBox = $(".empty").eq(random);
+
+        // Fill the random empty box.
+        fillBox(randomEmptyBox);
+    };
+
+    var aiWinnerCheck = function() {
+        var winnerFlag = '';
+
+
+
+        // Return either "p1", "p2", or "tie".
+        return winnerFlag;
+    };
+
     var takeTurn = function() {
         // Toggle boolean of .turn property for each player.
         if (PLAYER_1.turn === true) {
@@ -144,7 +185,7 @@
         checkForWinner();
 
         // At end of each turn, change the active player.
-        setActivePlayer();
+        nextPlayer();
     };
 
     // Hide #board div, show #finish div, and indicate winner.
@@ -175,6 +216,19 @@
         }
     };
 
+    var fillBox = function($boxToFill) {
+        if (PLAYER_1.turn === true) {
+            if (!$boxToFill.hasClass("box-filled-1") && !$boxToFill.hasClass("box-filled-2")) {
+                $boxToFill.addClass("box-filled-1");
+                takeTurn();
+            }
+        } else if (PLAYER_2.turn === true)
+            if (!$boxToFill.hasClass("box-filled-1") && !$boxToFill.hasClass("box-filled-2")) {
+                $boxToFill.addClass("box-filled-2");
+                takeTurn();
+            }
+    };
+
     // Click handler for "Start game" button.
     $(document).on("click", "#start .button", function() {
         newGame();
@@ -187,20 +241,11 @@
 
     // Click handler for boxes.
     $(".box").click(function() {
-        if (PLAYER_1.turn === true) {
-            if (!$(this).hasClass("box-filled-1") && !$(this).hasClass("box-filled-2")) {
-                $(this).addClass("box-filled-1");
-                takeTurn();
-            }
-        } else if (PLAYER_2.turn === true)
-            if (!$(this).hasClass("box-filled-1") && !$(this).hasClass("box-filled-2")) {
-                $(this).addClass("box-filled-2");
-                takeTurn();
-            }
+        fillBox($(this));
     });
 
 
-
+    addCoordinatesToBoard();
     showStartScreen();
 
 })(jQuery);
