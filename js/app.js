@@ -131,10 +131,19 @@ var takeTurn = function() {
     setActivePlayer();
 };
 
+// Check current pattern for a winner,
+// set .winner property on player (if there is one),
+// and call gameOver().
 var checkForWinner = function() {
-    // This code checks for a winner.
+    // Sets the winner flag for this function.
     var winner; // "p1", "p2", or "tie"
 
+    // Check all patterns and assign the winner flag.
+
+    // Pattern with all boxes filled and no winner.
+    winner = tie;
+
+    // Set the winner flags and call gameOver().
     if (winner === "p1") {
         PLAYER_1.winner = true;
         gameOver();
@@ -169,10 +178,10 @@ var gameOver = function() {
     // Indicate winner by changing paragraph text and adding the correct class to the #finish div.
     if (PLAYER_1.winner === true) {
         $("#finish").addClass("screen-win-one");
-        $(".message").html(PLAYER_1.name);
+        $(".message").html(PLAYER_1.name + " wins!");
     } else if (PLAYER_2.winner === true) {
         $("#finish").addClass("screen-win-two");
-        $(".message").html(PLAYER_2.name);
+        $(".message").html(PLAYER_2.name + " wins!");
     } else {
         $("#finish").addClass("screen-win-tie");
         $(".message").html("It's a Tie!");
