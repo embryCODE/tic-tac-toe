@@ -55,11 +55,6 @@
 
     // Start a new game.
     var newGame = function() {
-        // Remove the #finish div if it exists.
-        $("#finish").remove();
-        // Remove previous player names.
-        $(".player-name").remove();
-
         // Ask if playing another person or a computer.
         // Store 0 (falsey) for two player game and 1 (truthy) for one player game.
         GAME_MODE = parseInt(prompt("Press \"1\" to play a friend or \"2\" to play the computer.") - 1);
@@ -75,6 +70,14 @@
 
         // Set player 1 turn to true.
         PLAYER_1.turn = true;
+
+        // Remove the #finish div if it exists.
+        $("#finish").remove();
+        // Remove previous player names.
+        $(".player-name").remove();
+        // Remove all previous checked boxes.
+        $(".box").removeClass("box-filled-1");
+        $(".box").removeClass("box-filled-2");
 
         // Hide start screen and show board.
         $("#start").hide();
@@ -162,7 +165,7 @@
     var aiWinnerCheck = function() {
         var winnerFlag = '';
 
-        var vc = [
+        var winningRows = [
             ["11", "12", "13"],
             ["21", "22", "23"],
             ["31", "32", "33"],
@@ -173,8 +176,49 @@
             ["31", "22", "13"]
         ];
 
+        var p1SelectedBoxes = [];
+        var p2SelectedBoxes = [];
 
-        // Return either "p1", "p2", or "tie".
+        $(".box").each(function() {
+            if ($(this).hasClass("box-filled-1")) {
+                p1SelectedBoxes.push($(this).attr('id'));
+            } else if ($(this).hasClass("box-filled-2")) {
+                p2SelectedBoxes.push($(this).attr('id'));
+            }
+        });
+
+        function checkPlayer1() {
+            function p1Win(val) {
+                return p1SelectedBoxes.indexOf(val) >= 0;
+            }
+            for (var i = 0; i < 8; i++) {
+                var foundMatch = winningRows[i].every(p1Win);
+                if (foundMatch) {
+                    winnerFlag = "p1";
+                }
+            }
+        }
+        function checkPlayer2() {
+            function p2Win(val) {
+                return p2SelectedBoxes.indexOf(val) >= 0;
+            }
+            for (var i = 0; i < 8; i++) {
+                var foundMatch = winningRows[i].every(p2Win);
+                if (foundMatch) {
+                    winnerFlag = "p2";
+                }
+            }
+        }
+        function checkTie() { //check if player one wins
+            if (p2SelectedBoxes.length === 8) {
+                winnerFlag = "tie";
+            }
+        }
+
+        checkPlayer1();
+        checkPlayer2();
+        checkTie();
+
         return winnerFlag;
     };
 
