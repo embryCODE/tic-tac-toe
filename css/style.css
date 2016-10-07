@@ -200,3 +200,31 @@ h1 {
     background-color: #3688C3;
     background-image: url(../img/x.svg);
 }
+
+
+
+/* ADDED STYLES */
+
+.player-name {
+    margin: 0 0 5px 0;
+}
+
+.player-name-1 {
+    color: #FFA000;
+}
+
+.player-name-2 {
+    color: #3688C3;
+}
+
+#player1.active .player-name-1 {
+    color: white;
+}
+
+#player2.active .player-name-2 {
+    color: white;
+}
+
+.box:hover {
+
+}
