@@ -55,6 +55,18 @@
 
     // Start a new game.
     var newGame = function() {
+        // Remove the #finish div if it exists.
+        $("#finish").remove();
+        // Remove previous player names.
+        $(".player-name").remove();
+        // Remove all previous checked boxes.
+        $(".box").removeClass("box-filled-1");
+        $(".box").removeClass("box-filled-2");
+
+        // Hide start screen and show board.
+        $("#start").hide();
+        $("#board").show();
+
         // Ask if playing another person or a computer.
         // Store 0 (falsey) for two player game and 1 (truthy) for one player game.
         GAME_MODE = parseInt(prompt("Press \"1\" to play a friend or \"2\" to play the computer.") - 1);
@@ -71,24 +83,13 @@
         // Set player 1 turn to true.
         PLAYER_1.turn = true;
 
-        // Remove the #finish div if it exists.
-        $("#finish").remove();
-        // Remove previous player names.
-        $(".player-name").remove();
-        // Remove all previous checked boxes.
-        $(".box").removeClass("box-filled-1");
-        $(".box").removeClass("box-filled-2");
-
-        // Hide start screen and show board.
-        $("#start").hide();
-        $("#board").show();
-
         // Display the correct names for each player.
         $("#player1").prepend('<h4 class="player-name player-name-1">' + PLAYER_1.name + '</h4>');
         $("#player2").prepend('<h4 class="player-name player-name-2">' + PLAYER_2.name + '</h4>');
 
         // Set the active player.
         nextPlayer();
+
     };
 
     // Display appropriate symbol over box on hover.
@@ -212,14 +213,14 @@
         }
 
         function checkTie() { //check if player one wins
-            if (p2SelectedBoxes.length === 8) {
+            if ((p1SelectedBoxes.length + p2SelectedBoxes.length) === 9) {
                 winnerFlag = "tie";
             }
         }
 
+        checkTie();
         checkPlayer1();
         checkPlayer2();
-        checkTie();
 
         return winnerFlag;
     };
