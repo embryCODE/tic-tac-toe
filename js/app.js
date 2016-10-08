@@ -125,7 +125,7 @@
 
         // Make computer move after 1 second if 1 player game.
         if (PLAYER_2.computerPlayer === true &&
-            PLAYER_2.turn === true  &&
+            PLAYER_2.turn === true &&
             PLAYER_1.winner === false) {
             setTimeout(aiMove, 1000);
         }
@@ -305,7 +305,13 @@
 
     // Click handler for boxes.
     $(".box").click(function() {
-        fillBox($(this));
+        // Disable clicking if it's the computer's turn.
+        if (PLAYER_2.computerPlayer === true &&
+            PLAYER_2.turn === true) {
+                
+            } else {
+                fillBox($(this));
+            }
     });
 
 
