@@ -206,7 +206,9 @@ h1 {
 /* ADDED STYLES */
 
 .player-name {
-    margin: 0 0 5px 0;
+    margin: 0 0 7px 0;
+    font-weight: normal;
+    font-size: 1.25em;
 }
 
 .player-name-1 {
@@ -225,6 +227,6 @@ h1 {
     color: white;
 }
 
-.box:hover {
-
+.boxes {
+    margin-top: 60px;
 }

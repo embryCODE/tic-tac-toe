@@ -266,7 +266,8 @@
         }
 
         // At end of each turn, check for winner.
-        checkForWinner();
+        // Wait one second before checking.
+        setTimeout(checkForWinner, 1000);
 
         // At end of each turn, change the active player.
         nextPlayer();
