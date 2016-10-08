@@ -53,20 +53,8 @@
         $("body").append(startDivContent);
     };
 
-    // Start a new game.
-    var newGame = function() {
-        // Remove the #finish div if it exists.
-        $("#finish").remove();
-        // Remove previous player names.
-        $(".player-name").remove();
-        // Remove all previous checked boxes.
-        $(".box").removeClass("box-filled-1");
-        $(".box").removeClass("box-filled-2");
-
-        // Hide start screen and show board.
-        $("#start").hide();
-        $("#board").show();
-
+    // Setup new players.
+    var initializePlayers = function() {
         // Ask if playing another person or a computer.
         // Store 0 (falsey) for two player game and 1 (truthy) for one player game.
         GAME_MODE = parseInt(prompt("Press \"1\" to play a friend or \"2\" to play the computer.") - 1);
@@ -82,6 +70,23 @@
 
         // Set player 1 turn to true.
         PLAYER_1.turn = true;
+    };
+
+    // Start a new game.
+    var newGame = function() {
+        // Remove the #finish div if it exists.
+        $("#finish").remove();
+        // Remove previous player names.
+        $(".player-name").remove();
+        // Remove all previous checked boxes.
+        $(".box").removeClass("box-filled-1");
+        $(".box").removeClass("box-filled-2");
+
+        // Hide start screen and show board.
+        $("#start").hide();
+        $("#board").show();
+
+        initializePlayers();
 
         // Display the correct names for each player.
         $("#player1").prepend('<h4 class="player-name player-name-1">' + PLAYER_1.name + '</h4>');
@@ -119,7 +124,9 @@
         }
 
         // Make computer move after 1 second if 1 player game.
-        if (PLAYER_2.computerPlayer === true && PLAYER_2.turn === true) {
+        if (PLAYER_2.computerPlayer === true &&
+            PLAYER_2.turn === true  &&
+            PLAYER_1.winner === false) {
             setTimeout(aiMove, 1000);
         }
     };
