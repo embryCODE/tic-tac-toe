@@ -31,20 +31,20 @@
     var addCoordinatesToBoard = function() {
         var grid = [11, 12, 13, 21, 22, 23, 31, 32, 33];
         for (var i = 0; i < 9; i++) {
-            $(".box").slice(i).attr("id", grid[i]);
+            $('.box').slice(i).attr('id', grid[i]);
         }
     };
 
     /* Setup new players and set game mode.
     Update GAME_MODE to 0 for 2 player game or 1 for computer play. */
     var initializePlayers = function() {
-        GAME_MODE = parseInt(prompt("Press \"1\" to play a friend or \"2\" to play the computer.") - 1);
+        GAME_MODE = parseInt(prompt('Press "1" to play a friend or "2" to play the computer.') - 1);
 
         PLAYER_1 = new PlayerConstructor(prompt("What is player 1's name?"));
         if (GAME_MODE === 0) {
             PLAYER_2 = new PlayerConstructor(prompt("What is player 2's name?"));
         } else if (GAME_MODE === 1) {
-            PLAYER_2 = new PlayerConstructor("Bob the Computer");
+            PLAYER_2 = new PlayerConstructor('Bob the Computer');
             PLAYER_2.computerPlayer = true;
         }
 
@@ -53,7 +53,7 @@
 
     /* Create and show start screen. */
     var showStartScreen = function() {
-        $("#board").hide();
+        $('#board').hide();
 
         var startDivContent = '<div class="screen screen-start" id="start">';
         startDivContent += '<header>';
@@ -61,24 +61,24 @@
         startDivContent += '<a href="#" class="button">Start game</a>';
         startDivContent += '</header>';
         startDivContent += '</div>';
-        $("body").append(startDivContent);
+        $('body').append(startDivContent);
     };
 
     /* Start a new game. */
     var newGame = function() {
-        $("#finish").remove();
-        $(".player-name").remove();
-        $(".box").removeClass("box-filled-1");
-        $(".box").removeClass("box-filled-2");
+        $('#finish').remove();
+        $('.player-name').remove();
+        $('.box').removeClass('box-filled-1');
+        $('.box').removeClass('box-filled-2');
 
-        $("#start").hide();
-        $("#board").show();
+        $('#start').hide();
+        $('#board').show();
 
         initializePlayers();
 
-        $("#player1").prepend('<h4 class="player-name player-name-1">' +
+        $('#player1').prepend('<h4 class="player-name player-name-1">' +
             PLAYER_1.name + '</h4>');
-        $("#player2").prepend('<h4 class="player-name player-name-2">' +
+        $('#player2').prepend('<h4 class="player-name player-name-2">' +
             PLAYER_2.name + '</h4>');
 
         nextPlayer();
@@ -88,34 +88,34 @@
     set .winner property on player (if there is one),
     and call gameOver(). */
     var checkForWinner = function() {
-        var winner = aiWinnerCheck(); /* "p1", "p2", or "tie" */
+        var winner = aiWinnerCheck(); /* 'p1', 'p2', or 'tie' */
 
-        if (winner === "p1") {
+        if (winner === 'p1') {
             PLAYER_1.winner = true;
             setTimeout(gameOver, 1000);
-        } else if (winner === "p2") {
+        } else if (winner === 'p2') {
             PLAYER_2.winner = true;
             setTimeout(gameOver, 1000);
-        } else if (winner === "tie") {
+        } else if (winner === 'tie') {
             setTimeout(gameOver, 1000);
         }
     };
 
     /* Make a random move. No real AI. */
     var aiMove = function() {
-        $(".box").each(function() {
-            if ($(this).hasClass("box-filled-1") ||
-                $(this).hasClass("box-filled-2")) {
+        $('.box').each(function() {
+            if ($(this).hasClass('box-filled-1') ||
+                $(this).hasClass('box-filled-2')) {
 
-                $(this).removeClass("empty");
+                $(this).removeClass('empty');
             } else {
-                $(this).addClass("empty");
+                $(this).addClass('empty');
             }
         });
 
-        var numberOfEmptyBoxes = $(".empty").length;
+        var numberOfEmptyBoxes = $('.empty').length;
         var random = Math.floor(Math.random() * numberOfEmptyBoxes);
-        var randomEmptyBox = $(".empty").eq(random);
+        var randomEmptyBox = $('.empty').eq(random);
 
         fillBox(randomEmptyBox);
     };
@@ -125,24 +125,24 @@
 
         /* List of all possible winning combinations. */
         var winningRows = [
-            ["11", "12", "13"],
-            ["21", "22", "23"],
-            ["31", "32", "33"],
-            ["11", "21", "31"],
-            ["12", "22", "32"],
-            ["13", "23", "33"],
-            ["11", "22", "33"],
-            ["31", "22", "13"]
+            ['11', '12', '13'],
+            ['21', '22', '23'],
+            ['31', '32', '33'],
+            ['11', '21', '31'],
+            ['12', '22', '32'],
+            ['13', '23', '33'],
+            ['11', '22', '33'],
+            ['31', '22', '13']
         ];
 
         var p1SelectedBoxes = [];
         var p2SelectedBoxes = [];
 
         /* Fill the above variables with selected boxes of each player. */
-        $(".box").each(function() {
-            if ($(this).hasClass("box-filled-1")) {
+        $('.box').each(function() {
+            if ($(this).hasClass('box-filled-1')) {
                 p1SelectedBoxes.push($(this).attr('id'));
-            } else if ($(this).hasClass("box-filled-2")) {
+            } else if ($(this).hasClass('box-filled-2')) {
                 p2SelectedBoxes.push($(this).attr('id'));
             }
         });
@@ -155,7 +155,7 @@
             for (var i = 0; i < 8; i++) {
                 var foundMatch = winningRows[i].every(p1Win);
                 if (foundMatch) {
-                    winnerFlag = "p1";
+                    winnerFlag = 'p1';
                 }
             }
         }
@@ -168,7 +168,7 @@
             for (var i = 0; i < 8; i++) {
                 var foundMatch = winningRows[i].every(p2Win);
                 if (foundMatch) {
-                    winnerFlag = "p2";
+                    winnerFlag = 'p2';
                 }
             }
         }
@@ -176,7 +176,7 @@
         /* Check for a tie. If all boxes are filled with no winner, it's a tie */
         function checkTie() {
             if ((p1SelectedBoxes.length + p2SelectedBoxes.length) === 9) {
-                winnerFlag = "tie";
+                winnerFlag = 'tie';
             }
         }
 
@@ -190,17 +190,17 @@
     /* Fill a box by passing a jQuery object in as an argument. */
     var fillBox = function($boxToFill) {
         if (PLAYER_1.turn === true) {
-            if (!$boxToFill.hasClass("box-filled-1") &&
-                !$boxToFill.hasClass("box-filled-2")) {
+            if (!$boxToFill.hasClass('box-filled-1') &&
+                !$boxToFill.hasClass('box-filled-2')) {
 
-                $boxToFill.addClass("box-filled-1");
+                $boxToFill.addClass('box-filled-1');
                 takeTurn();
             }
         } else if (PLAYER_2.turn === true)
-            if (!$boxToFill.hasClass("box-filled-1") &&
-                !$boxToFill.hasClass("box-filled-2")) {
+            if (!$boxToFill.hasClass('box-filled-1') &&
+                !$boxToFill.hasClass('box-filled-2')) {
 
-                $boxToFill.addClass("box-filled-2");
+                $boxToFill.addClass('box-filled-2');
                 takeTurn();
             }
     };
@@ -225,7 +225,7 @@
 
     /* Hide #board div, show #finish div, and indicate winner. */
     var gameOver = function() {
-        $("#board").hide();
+        $('#board').hide();
 
         var finishDivContent = '<div class="screen screen-win" id="finish">';
         finishDivContent += '<header>';
@@ -234,30 +234,30 @@
         finishDivContent += '<a href="#" class="button">New game</a>';
         finishDivContent += '</header>';
         finishDivContent += '</div>';
-        $("body").append(finishDivContent);
+        $('body').append(finishDivContent);
 
         /* Indicate winner by changing paragraph text
         and adding the correct class to the #finish div. */
         if (PLAYER_1.winner === true) {
-            $("#finish").addClass("screen-win-one");
-            $(".message").html(PLAYER_1.name + " wins!");
+            $('#finish').addClass('screen-win-one');
+            $('.message').html(PLAYER_1.name + ' wins!');
         } else if (PLAYER_2.winner === true) {
-            $("#finish").addClass("screen-win-two");
-            $(".message").html(PLAYER_2.name + " wins!");
+            $('#finish').addClass('screen-win-two');
+            $('.message').html(PLAYER_2.name + ' wins!');
         } else {
-            $("#finish").addClass("screen-win-tie");
-            $(".message").html("It's a Tie!");
+            $('#finish').addClass('screen-win-tie');
+            $('.message').html("It's a Tie!");
         }
     };
 
     /* Change active player and make computer move if necessary. */
     var nextPlayer = function() {
-        $("li").removeClass("active");
+        $('li').removeClass('active');
 
         if (PLAYER_1.turn === true) {
-            $("#player1").addClass("active");
+            $('#player1').addClass('active');
         } else if (PLAYER_2.turn === true) {
-            $("#player2").addClass("active");
+            $('#player2').addClass('active');
         }
 
         if (PLAYER_2.computerPlayer === true &&
@@ -269,9 +269,9 @@
     };
 
     /* Display appropriate symbol over box on hover. */
-    $(".box").hover(function() {
-        if (!$(this).hasClass("box-filled-1") &&
-            !$(this).hasClass("box-filled-2")) {
+    $('.box').hover(function() {
+        if (!$(this).hasClass('box-filled-1') &&
+            !$(this).hasClass('box-filled-2')) {
 
             if (PLAYER_1.turn === true) {
                 $(this).css('background-image', 'url(img/o.svg)');
@@ -283,13 +283,13 @@
         $(this).css('background-image', '');
     });
 
-    /* Click handler for "Start game" button. */
-    $(document).on("click", "#start .button", function() {
+    /* Click handler for 'Start game' button. */
+    $(document).on('click', '#start .button', function() {
         newGame();
     });
 
     /* Click handler for boxes. */
-    $(".box").click(function() {
+    $('.box').click(function() {
         if (PLAYER_2.computerPlayer === true &&
             PLAYER_2.turn === true) {
 
@@ -298,8 +298,8 @@
         }
     });
 
-    /* Click handler for "New game" button. */
-    $(document).on("click", "#finish .button", function() {
+    /* Click handler for 'New game' button. */
+    $(document).on('click', '#finish .button', function() {
         newGame();
     });
 
