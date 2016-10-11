@@ -64,7 +64,8 @@
         $('body').append(startDivContent);
     };
 
-    /* Start a new game. */
+    /* Start a new game. Removes and shows UI elements. Initializes game and
+    players. Adds player names. Advances to next player. */
     var newGame = function() {
         $('#finish').remove();
         $('.player-name').remove();
@@ -120,6 +121,8 @@
         fillBox(randomEmptyBox);
     };
 
+    /* Check's each player's filled boxes against all possible winning
+    combinations. Returns a winner flag. */
     var aiWinnerCheck = function() {
         var winnerFlag = '';
 
