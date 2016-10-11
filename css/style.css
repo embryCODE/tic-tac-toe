@@ -30,7 +30,7 @@ h1 {
 }
 
 .button:hover {
-    color: #000;
+    color: #000 !important;
 }
 
 .screen {
