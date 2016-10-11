@@ -35,8 +35,7 @@
         }
     };
 
-    /* Setup new players and set game mode.
-    Update GAME_MODE to 0 for 2 player game or 1 for computer play. */
+    /* Setup new players and set game mode. */
     var initializePlayers = function() {
         var p1Name = 'Player 1';
         var p2Name = 'Player 2';
