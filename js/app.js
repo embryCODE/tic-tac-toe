@@ -38,14 +38,27 @@
     /* Setup new players and set game mode.
     Update GAME_MODE to 0 for 2 player game or 1 for computer play. */
     var initializePlayers = function() {
-        GAME_MODE = parseInt(prompt('Press "1" to play a friend or "2" to play the computer.') - 1);
+        var p1Name = 'Player 1';
+        var p2Name = 'Player 2';
 
-        PLAYER_1 = new PlayerConstructor(prompt("What is player 1's name?"));
-        if (GAME_MODE === 0) {
-            PLAYER_2 = new PlayerConstructor(prompt("What is player 2's name?"));
-        } else if (GAME_MODE === 1) {
-            PLAYER_2 = new PlayerConstructor('Bob the Computer');
+        if ($('#name-p1').val()) {
+            p1Name = $('#name-p1').val();
+        }
+
+        if ($('#name-p2').val()) {
+            p2Name = $('#name-p2').val();
+        }
+
+        if ($('.player1-select').is(':checked')) {
+            GAME_MODE = 0;
+            p2Name = 'Bob the Computer';
+            PLAYER_1 = new PlayerConstructor(p1Name);
+            PLAYER_2 = new PlayerConstructor(p2Name);
             PLAYER_2.computerPlayer = true;
+        } else {
+            GAME_MODE = 1;
+            PLAYER_1 = new PlayerConstructor(p1Name);
+            PLAYER_2 = new PlayerConstructor(p2Name);
         }
 
         PLAYER_1.turn = true;
@@ -53,16 +66,39 @@
 
     /* Create and show start screen. */
     var showStartScreen = function() {
+        $('.screen-start').remove();
         $('#board').hide();
 
         var startDivContent = '<div class="screen screen-start" id="start">';
         startDivContent += '<header>';
         startDivContent += '<h1>Tic Tac Toe</h1>';
-        startDivContent += '<a href="#" class="button">Start game</a>';
+        startDivContent += '<form id="game-setup">';
+        startDivContent += '<label class="form-instructions">Please select 1 or 2 player mode:</label>';
+        startDivContent += '<input class="player-select player1-select" type="radio" name="game-mode" value="1 Player" checked>';
+        startDivContent += '<label class="player-select-label">1 Player </label>';
+        startDivContent += '<input class="player-select player2-select" type="radio" name="game-mode" value="2 Player">';
+        startDivContent += '<label class="player-select-label player2-select-label">2 Players </label>';
+        startDivContent += '<label class="form-instructions">Please enter a name for each player:</label>';
+        startDivContent += '<input type="text" id="name-p1" name="name-p1" placeholder="Player 1">';
+        startDivContent += '<input type="text" id="name-p2" name="name-p2" placeholder="Bob the Computer" disabled>';
+        startDivContent += '<input type="submit" class="button" value="Start game">';
+        startDivContent += '</form>';
         startDivContent += '</header>';
         startDivContent += '</div>';
+
         $('body').append(startDivContent);
     };
+
+    /* Player select button UI handling */
+    $('body').on('click', 'input[type="radio"]', function() {
+        if ($(this).val() === '1 Player') {
+            $('#name-p2').prop('placeholder', 'Bob the Computer');
+            $('#name-p2').prop('disabled', true);
+        } else if ($(this).val() === '2 Player') {
+            $('#name-p2').prop('placeholder', 'Player 2');
+            $('#name-p2').prop('disabled', false);
+        }
+    });
 
     /* Start a new game. Removes and shows UI elements. Initializes game and
     players. Adds player names. Advances to next player. */
@@ -287,7 +323,8 @@
     });
 
     /* Click handler for 'Start game' button. */
-    $(document).on('click', '#start .button', function() {
+    $(document).on('click', '#start .button', function(e) {
+        e.preventDefault();
         newGame();
     });
 
@@ -303,7 +340,7 @@
 
     /* Click handler for 'New game' button. */
     $(document).on('click', '#finish .button', function() {
-        newGame();
+        showStartScreen();
     });
 
 
