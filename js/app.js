@@ -6,7 +6,7 @@
 
     Author: Mason Embry
     Created 10/6/2016
-    Last Updated: 10/8/2016
+    Last Updated: 10/11/2016
 
     Tested in current versions of Chrome, Safari, and Firefox.
 
