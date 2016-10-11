@@ -110,12 +110,12 @@
         // Set the winner flags and call gameOver().
         if (winner === "p1") {
             PLAYER_1.winner = true;
-            gameOver();
+            setTimeout(gameOver, 1000);
         } else if (winner === "p2") {
             PLAYER_2.winner = true;
-            gameOver();
+            setTimeout(gameOver, 1000);
         } else if (winner === "tie") {
-            gameOver();
+            setTimeout(gameOver, 1000);
         }
     };
 
@@ -230,26 +230,6 @@
         }
     };
 
-    // Change active player and make computer move if necessary.
-    var nextPlayer = function() {
-        // First remove active class from all list items.
-        $("li").removeClass("active");
-
-        // Add active class to list item based on who's turn it is.
-        if (PLAYER_1.turn === true) {
-            $("#player1").addClass("active");
-        } else if (PLAYER_2.turn === true) {
-            $("#player2").addClass("active");
-        }
-
-        // Make computer move after 1 second if 1 player game.
-        if (PLAYER_2.computerPlayer === true &&
-            PLAYER_2.turn === true &&
-            PLAYER_1.winner === false) {
-            setTimeout(aiMove, 1000);
-        }
-    };
-
     // Toggle the .turn property on each player. Check for a winner.
     // Move to next player.
     var takeTurn = function() {
@@ -267,7 +247,7 @@
 
         // At end of each turn, check for winner.
         // Wait one second before checking.
-        setTimeout(checkForWinner, 1000);
+        checkForWinner();
 
         // At end of each turn, change the active player.
         nextPlayer();
@@ -299,6 +279,27 @@
         } else {
             $("#finish").addClass("screen-win-tie");
             $(".message").html("It's a Tie!");
+        }
+    };
+
+    // Change active player and make computer move if necessary.
+    var nextPlayer = function() {
+        // First remove active class from all list items.
+        $("li").removeClass("active");
+
+        // Add active class to list item based on who's turn it is.
+        if (PLAYER_1.turn === true) {
+            $("#player1").addClass("active");
+        } else if (PLAYER_2.turn === true) {
+            $("#player2").addClass("active");
+        }
+
+        // Make computer move after 1 second if 1 player game.
+        if (PLAYER_2.computerPlayer === true &&
+            PLAYER_2.turn === true &&
+            PLAYER_1.winner === false) {
+
+            setTimeout(aiMove, 1000);
         }
     };
 
