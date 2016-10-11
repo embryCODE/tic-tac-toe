@@ -2,26 +2,24 @@
 
     'use strict';
 
-    ////////// Tic-Tac-Toe //////////
-    //
-    // Author: Mason Embry
-    // Created 10/6/2016
-    // Last Updated: 10/8/2016
-    //
-    // Tested in current versions of Chrome, Safari, and Firefox.
-    //
-    /////////////////////////////////
+    /* Tic-Tac-Toe
+
+    Author: Mason Embry
+    Created 10/6/2016
+    Last Updated: 10/8/2016
+
+    Tested in current versions of Chrome, Safari, and Firefox.
+
+    */
 
 
 
-    // Create global variables.
     var PLAYER_1;
     var PLAYER_2;
     var GAME_MODE;
 
 
 
-    // Constructor for new player.
     var PlayerConstructor = function(name) {
         this.name = name;
         this.winner = false;
@@ -29,146 +27,166 @@
         this.computerPlayer = false;
     };
 
-    // Add coordinates to board using row/column ids.
+    /* Add coordinates to board using row/column ids. */
     var addCoordinatesToBoard = function() {
         var grid = [11, 12, 13, 21, 22, 23, 31, 32, 33];
         for (var i = 0; i < 9; i++) {
-            $(".box").slice(i).attr("id", grid[i]);
+            $('.box').slice(i).attr('id', grid[i]);
         }
     };
 
-    // Setup new players and set game mode.
+    /* Setup new players and set game mode.
+    Update GAME_MODE to 0 for 2 player game or 1 for computer play. */
     var initializePlayers = function() {
-        // Ask if playing another person or a computer.
-        // Store 0 (falsey) for two player game and 1 (truthy) for one player game.
-        GAME_MODE = parseInt(prompt("Press \"1\" to play a friend or \"2\" to play the computer.") - 1);
+        var p1Name = 'Player 1';
+        var p2Name = 'Player 2';
 
-        // Get names of players and create player objects.
-        PLAYER_1 = new PlayerConstructor(prompt("What is player 1's name?"));
-        // Only ask for player2's name if two player game.
-        if (GAME_MODE === 0) {
-            PLAYER_2 = new PlayerConstructor(prompt("What is player 2's name?"));
-        } else if (GAME_MODE === 1) {
-            // If 1 player game, PLAYER_2 is Bob the Computer.
-            PLAYER_2 = new PlayerConstructor("Bob the Computer");
-            PLAYER_2.computerPlayer = true;
+        if ($('#name-p1').val()) {
+            p1Name = $('#name-p1').val();
         }
 
-        // Set player 1 turn to true.
+        if ($('#name-p2').val()) {
+            p2Name = $('#name-p2').val();
+        }
+
+        if ($('.player1-select').is(':checked')) {
+            GAME_MODE = 0;
+            p2Name = 'Bob the Computer';
+            PLAYER_1 = new PlayerConstructor(p1Name);
+            PLAYER_2 = new PlayerConstructor(p2Name);
+            PLAYER_2.computerPlayer = true;
+        } else {
+            GAME_MODE = 1;
+            PLAYER_1 = new PlayerConstructor(p1Name);
+            PLAYER_2 = new PlayerConstructor(p2Name);
+        }
+
         PLAYER_1.turn = true;
     };
 
-    // Create and show start screen.
+    /* Create and show start screen. */
     var showStartScreen = function() {
-        // Hide entire #board div.
-        $("#board").hide();
+        $('.screen-start').remove();
+        $('#board').hide();
 
-        // Create #start div and append it to body.
         var startDivContent = '<div class="screen screen-start" id="start">';
         startDivContent += '<header>';
         startDivContent += '<h1>Tic Tac Toe</h1>';
-        startDivContent += '<a href="#" class="button">Start game</a>';
+        startDivContent += '<form id="game-setup">';
+        startDivContent += '<label class="form-instructions">Please select 1 or 2 player mode:</label>';
+        startDivContent += '<input class="player-select player1-select" type="radio" name="game-mode" value="1 Player" checked>';
+        startDivContent += '<label class="player-select-label">1 Player </label>';
+        startDivContent += '<input class="player-select player2-select" type="radio" name="game-mode" value="2 Player">';
+        startDivContent += '<label class="player-select-label player2-select-label">2 Players </label>';
+        startDivContent += '<label class="form-instructions">Please enter a name for each player:</label>';
+        startDivContent += '<input type="text" id="name-p1" name="name-p1" placeholder="Player 1">';
+        startDivContent += '<input type="text" id="name-p2" name="name-p2" placeholder="Bob the Computer" disabled>';
+        startDivContent += '<input type="submit" class="button" value="Start game">';
+        startDivContent += '</form>';
         startDivContent += '</header>';
         startDivContent += '</div>';
-        $("body").append(startDivContent);
+
+        $('body').append(startDivContent);
     };
 
-    // Start a new game.
+    /* Player select button UI handling */
+    $('body').on('click', 'input[type="radio"]', function() {
+        if ($(this).val() === '1 Player') {
+            $('#name-p2').prop('placeholder', 'Bob the Computer');
+            $('#name-p2').prop('disabled', true);
+        } else if ($(this).val() === '2 Player') {
+            $('#name-p2').prop('placeholder', 'Player 2');
+            $('#name-p2').prop('disabled', false);
+        }
+    });
+
+    /* Start a new game. Removes and shows UI elements. Initializes game and
+    players. Adds player names. Advances to next player. */
     var newGame = function() {
-        // Remove the #finish div if it exists.
-        $("#finish").remove();
-        // Remove previous player names.
-        $(".player-name").remove();
-        // Remove all previous checked boxes.
-        $(".box").removeClass("box-filled-1");
-        $(".box").removeClass("box-filled-2");
+        $('#finish').remove();
+        $('.player-name').remove();
+        $('.box').removeClass('box-filled-1');
+        $('.box').removeClass('box-filled-2');
 
-        // Hide start screen and show board.
-        $("#start").hide();
-        $("#board").show();
+        $('#start').hide();
+        $('#board').show();
 
-        // Initialize players and game mode.
         initializePlayers();
 
-        // Display the correct names for each player.
-        $("#player1").prepend('<h4 class="player-name player-name-1">' +
+        $('#player1').prepend('<h4 class="player-name player-name-1">' +
             PLAYER_1.name + '</h4>');
-        $("#player2").prepend('<h4 class="player-name player-name-2">' +
+        $('#player2').prepend('<h4 class="player-name player-name-2">' +
             PLAYER_2.name + '</h4>');
 
-        // Set the active player.
         nextPlayer();
     };
 
-    // Check current pattern for a winner,
-    // set .winner property on player (if there is one),
-    // and call gameOver().
+    /* Check current pattern for a winner,
+    set .winner property on player (if there is one),
+    and call gameOver(). */
     var checkForWinner = function() {
-        // Check all patterns and return the winner flag as a string.
-        var winner = aiWinnerCheck(); // "p1", "p2", or "tie"
+        var winner = aiWinnerCheck(); /* 'p1', 'p2', or 'tie' */
 
-        // Set the winner flags and call gameOver().
-        if (winner === "p1") {
+        if (winner === 'p1') {
             PLAYER_1.winner = true;
             setTimeout(gameOver, 1000);
-        } else if (winner === "p2") {
+        } else if (winner === 'p2') {
             PLAYER_2.winner = true;
             setTimeout(gameOver, 1000);
-        } else if (winner === "tie") {
+        } else if (winner === 'tie') {
             setTimeout(gameOver, 1000);
         }
     };
 
-    // Make a random move. No real AI.
+    /* Make a random move. No real AI. */
     var aiMove = function() {
-        // Add .empty to empty boxes and remove .empty from filled boxes.
-        $(".box").each(function() {
-            if ($(this).hasClass("box-filled-1") ||
-                $(this).hasClass("box-filled-2")) {
+        $('.box').each(function() {
+            if ($(this).hasClass('box-filled-1') ||
+                $(this).hasClass('box-filled-2')) {
 
-                $(this).removeClass("empty");
+                $(this).removeClass('empty');
             } else {
-                $(this).addClass("empty");
+                $(this).addClass('empty');
             }
         });
 
-        // Get a random empty box.
-        var numberOfEmptyBoxes = $(".empty").length;
+        var numberOfEmptyBoxes = $('.empty').length;
         var random = Math.floor(Math.random() * numberOfEmptyBoxes);
-        var randomEmptyBox = $(".empty").eq(random);
+        var randomEmptyBox = $('.empty').eq(random);
 
-        // Fill the random empty box.
         fillBox(randomEmptyBox);
     };
 
+    /* Check's each player's filled boxes against all possible winning
+    combinations. Returns a winner flag. */
     var aiWinnerCheck = function() {
         var winnerFlag = '';
 
-        // List of all possible winning combinations.
+        /* List of all possible winning combinations. */
         var winningRows = [
-            ["11", "12", "13"],
-            ["21", "22", "23"],
-            ["31", "32", "33"],
-            ["11", "21", "31"],
-            ["12", "22", "32"],
-            ["13", "23", "33"],
-            ["11", "22", "33"],
-            ["31", "22", "13"]
+            ['11', '12', '13'],
+            ['21', '22', '23'],
+            ['31', '32', '33'],
+            ['11', '21', '31'],
+            ['12', '22', '32'],
+            ['13', '23', '33'],
+            ['11', '22', '33'],
+            ['31', '22', '13']
         ];
 
         var p1SelectedBoxes = [];
         var p2SelectedBoxes = [];
 
-        // Fill the above variables with selected boxes of each player.
-        $(".box").each(function() {
-            if ($(this).hasClass("box-filled-1")) {
+        /* Fill the above variables with selected boxes of each player. */
+        $('.box').each(function() {
+            if ($(this).hasClass('box-filled-1')) {
                 p1SelectedBoxes.push($(this).attr('id'));
-            } else if ($(this).hasClass("box-filled-2")) {
+            } else if ($(this).hasClass('box-filled-2')) {
                 p2SelectedBoxes.push($(this).attr('id'));
             }
         });
 
-        // Check p1SelectedBoxes against each item in winningRows array.
+        /* Check p1SelectedBoxes against each item in winningRows array. */
         function checkPlayer1() {
             function p1Win(val) {
                 return p1SelectedBoxes.indexOf(val) > -1;
@@ -176,12 +194,12 @@
             for (var i = 0; i < 8; i++) {
                 var foundMatch = winningRows[i].every(p1Win);
                 if (foundMatch) {
-                    winnerFlag = "p1";
+                    winnerFlag = 'p1';
                 }
             }
         }
 
-        // Check p2SelectedBoxes against each item in winningRows array.
+        /* Check p2SelectedBoxes against each item in winningRows array. */
         function checkPlayer2() {
             function p2Win(val) {
                 return p2SelectedBoxes.indexOf(val) > -1;
@@ -189,15 +207,15 @@
             for (var i = 0; i < 8; i++) {
                 var foundMatch = winningRows[i].every(p2Win);
                 if (foundMatch) {
-                    winnerFlag = "p2";
+                    winnerFlag = 'p2';
                 }
             }
         }
 
-        // Check for a tie. If all boxes are filled with no winner, it's a tie.
+        /* Check for a tie. If all boxes are filled with no winner, it's a tie */
         function checkTie() {
             if ((p1SelectedBoxes.length + p2SelectedBoxes.length) === 9) {
-                winnerFlag = "tie";
+                winnerFlag = 'tie';
             }
         }
 
@@ -208,32 +226,27 @@
         return winnerFlag;
     };
 
-    // Fill a box by passing a jQuery object in as an argument.
+    /* Fill a box by passing a jQuery object in as an argument. */
     var fillBox = function($boxToFill) {
-        // Fill O's for PLAYER_1.
         if (PLAYER_1.turn === true) {
-            // Only fill a box if it is not already filled.
-            if (!$boxToFill.hasClass("box-filled-1") &&
-                !$boxToFill.hasClass("box-filled-2")) {
+            if (!$boxToFill.hasClass('box-filled-1') &&
+                !$boxToFill.hasClass('box-filled-2')) {
 
-                $boxToFill.addClass("box-filled-1");
+                $boxToFill.addClass('box-filled-1');
                 takeTurn();
             }
-            // Fill X's for PLAYER_2.
         } else if (PLAYER_2.turn === true)
-        // Only fill a box if it is not already filled.
-            if (!$boxToFill.hasClass("box-filled-1") &&
-            !$boxToFill.hasClass("box-filled-2")) {
+            if (!$boxToFill.hasClass('box-filled-1') &&
+                !$boxToFill.hasClass('box-filled-2')) {
 
-            $boxToFill.addClass("box-filled-2");
-            takeTurn();
-        }
+                $boxToFill.addClass('box-filled-2');
+                takeTurn();
+            }
     };
 
-    // Toggle the .turn property on each player. Check for a winner.
-    // Move to next player.
+    /* Toggle the .turn property on each player. Check for a winner.
+    Move to next player. */
     var takeTurn = function() {
-        // Toggle boolean of .turn property for each player.
         if (PLAYER_1.turn === true) {
             PLAYER_1.turn = false;
         } else {
@@ -245,20 +258,14 @@
             PLAYER_2.turn = true;
         }
 
-        // At end of each turn, check for winner.
-        // Wait one second before checking.
         checkForWinner();
-
-        // At end of each turn, change the active player.
         nextPlayer();
     };
 
-    // Hide #board div, show #finish div, and indicate winner.
+    /* Hide #board div, show #finish div, and indicate winner. */
     var gameOver = function() {
-        // Hide #board div.
-        $("#board").hide();
+        $('#board').hide();
 
-        // Create #finish div and append to body.
         var finishDivContent = '<div class="screen screen-win" id="finish">';
         finishDivContent += '<header>';
         finishDivContent += '<h1>Tic Tac Toe</h1>';
@@ -266,35 +273,32 @@
         finishDivContent += '<a href="#" class="button">New game</a>';
         finishDivContent += '</header>';
         finishDivContent += '</div>';
-        $("body").append(finishDivContent);
+        $('body').append(finishDivContent);
 
-        // Indicate winner by changing paragraph text
-        // and adding the correct class to the #finish div.
+        /* Indicate winner by changing paragraph text
+        and adding the correct class to the #finish div. */
         if (PLAYER_1.winner === true) {
-            $("#finish").addClass("screen-win-one");
-            $(".message").html(PLAYER_1.name + " wins!");
+            $('#finish').addClass('screen-win-one');
+            $('.message').html(PLAYER_1.name + ' wins!');
         } else if (PLAYER_2.winner === true) {
-            $("#finish").addClass("screen-win-two");
-            $(".message").html(PLAYER_2.name + " wins!");
+            $('#finish').addClass('screen-win-two');
+            $('.message').html(PLAYER_2.name + ' wins!');
         } else {
-            $("#finish").addClass("screen-win-tie");
-            $(".message").html("It's a Tie!");
+            $('#finish').addClass('screen-win-tie');
+            $('.message').html("It's a Tie!");
         }
     };
 
-    // Change active player and make computer move if necessary.
+    /* Change active player and make computer move if necessary. */
     var nextPlayer = function() {
-        // First remove active class from all list items.
-        $("li").removeClass("active");
+        $('li').removeClass('active');
 
-        // Add active class to list item based on who's turn it is.
         if (PLAYER_1.turn === true) {
-            $("#player1").addClass("active");
+            $('#player1').addClass('active');
         } else if (PLAYER_2.turn === true) {
-            $("#player2").addClass("active");
+            $('#player2').addClass('active');
         }
 
-        // Make computer move after 1 second if 1 player game.
         if (PLAYER_2.computerPlayer === true &&
             PLAYER_2.turn === true &&
             PLAYER_1.winner === false) {
@@ -303,13 +307,11 @@
         }
     };
 
-    // Display appropriate symbol over box on hover.
-    $(".box").hover(function() {
-        // Hover effect only works if box isn't filled.
-        if (!$(this).hasClass("box-filled-1") &&
-            !$(this).hasClass("box-filled-2")) {
+    /* Display appropriate symbol over box on hover. */
+    $('.box').hover(function() {
+        if (!$(this).hasClass('box-filled-1') &&
+            !$(this).hasClass('box-filled-2')) {
 
-            // Fill X or O depending on who's turn it is.
             if (PLAYER_1.turn === true) {
                 $(this).css('background-image', 'url(img/o.svg)');
             } else if (PLAYER_2.turn === true) {
@@ -320,26 +322,25 @@
         $(this).css('background-image', '');
     });
 
-    // Click handler for "Start game" button.
-    $(document).on("click", "#start .button", function() {
+    /* Click handler for 'Start game' button. */
+    $(document).on('click', '#start .button', function(e) {
+        e.preventDefault();
         newGame();
     });
 
-    // Click handler for boxes.
-    $(".box").click(function() {
-        // Disable clicking if it's the computer's turn.
+    /* Click handler for boxes. */
+    $('.box').click(function() {
         if (PLAYER_2.computerPlayer === true &&
             PLAYER_2.turn === true) {
 
         } else {
-            // Pass in clicked item as jQuery object.
             fillBox($(this));
         }
     });
 
-    // Click handler for "New game" button.
-    $(document).on("click", "#finish .button", function() {
-        newGame();
+    /* Click handler for 'New game' button. */
+    $(document).on('click', '#finish .button', function() {
+        showStartScreen();
     });
 
 

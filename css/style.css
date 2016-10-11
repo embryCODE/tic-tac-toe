@@ -230,3 +230,42 @@ h1 {
 .boxes {
     margin-top: 60px;
 }
+
+/* start screen */
+
+form {
+    padding: 20px 0;
+}
+
+.form-instructions {
+    margin: 30px 0 15px 0;
+    display: block;
+}
+
+.player-select, .player-select-label {
+    display: inline;
+}
+
+.player-select-label {
+    margin: 20px 15px 0 5px;
+}
+
+.player2-select-label {
+    margin-right: 0;
+}
+
+#name-p1, #name-p2 {
+    margin: 5px 15px 0 0;
+    border: none;
+    padding: 10px;
+}
+
+#name-p2 {
+    margin-right: 0;
+}
+
+form .button {
+    margin: 30px auto;
+    display: block;
+    border: none;
+}
