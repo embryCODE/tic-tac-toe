@@ -118,7 +118,6 @@
         $('#player2').prepend('<h4 class="player-name player-name-2">' +
             PLAYER_2.name + '</h4>');
 
-        nextPlayer();
     };
 
     /* Check current pattern for a winner,
@@ -290,7 +289,9 @@
             $('.message').html("It's a Tie!");
         }
 
+        /* Set active player back to player 1. */
         $('li').removeClass('active');
+        $('#player1').addClass('active');
     };
 
     /* Change active player and make computer move if necessary. */
