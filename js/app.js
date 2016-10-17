@@ -25,6 +25,7 @@
         this.winner = false;
         this.turn = false;
         this.computerPlayer = false;
+        this.tie = false;
     };
 
     /* Add coordinates to board using row/column ids. */
@@ -108,7 +109,7 @@
         $('.box').removeClass('box-filled-2');
 
         $('#start').hide();
-        $('#board').show();
+        $('#board').fadeIn(1000);
 
         initializePlayers();
 
@@ -133,6 +134,8 @@
             PLAYER_2.winner = true;
             setTimeout(gameOver, 1000);
         } else if (winner === 'tie') {
+            PLAYER_1.tie = true;
+            PLAYER_2.tie = true;
             setTimeout(gameOver, 1000);
         }
     };
@@ -286,6 +289,8 @@
             $('#finish').addClass('screen-win-tie');
             $('.message').html("It's a Tie!");
         }
+
+        $('li').removeClass('active');
     };
 
     /* Change active player and make computer move if necessary. */
@@ -300,7 +305,8 @@
 
         if (PLAYER_2.computerPlayer === true &&
             PLAYER_2.turn === true &&
-            PLAYER_1.winner === false) {
+            PLAYER_1.winner === false &&
+            PLAYER_1.tie === false) {
 
             setTimeout(aiMove, 1000);
         }
